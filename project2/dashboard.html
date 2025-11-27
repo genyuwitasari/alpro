@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Dashboard Penggajian Pegawai</title>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Dashboard Penggajian Pegawai</h1>
+            <nav>
+                <a href="index.html">Logout</a>
+            </nav>
+        </header>
+
+        <section class="features">
+            <!-- Pembuatan Database -->
+            <div class="feature">
+                <h2>Pembuatan Database</h2>
+                <button onclick="initializeDatabase()">Inisialisasi Database (Reset Data)</button>
+            </div>
+
+            <!-- Tambah Data -->
+            <div class="feature">
+                <h2>Tambah Data Pegawai</h2>
+                <form id="addForm">
+                    <input type="text" id="nik" placeholder="NIK" required>
+                    <input type="text" id="nama" placeholder="Nama" required>
+                    <input type="text" id="alamat" placeholder="Alamat" required>
+                    <input type="text" id="unit" placeholder="Unit" required>
+                    <input type="text" id="golongan" placeholder="Golongan" required>
+                    <input type="number" id="jumlahAnak" placeholder="Jumlah Anak" required>
+                    <input type="number" id="masukHari" placeholder="Masuk (Hari)" required>
+                    <input type="number" id="jamKerja" placeholder="Jam Kerja" required>
+                    <button type="submit">Tambah</button>
+                </form>
+            </div>
+
+            <!-- Ubah Data -->
+            <div class="feature">
+                <h2>Ubah Data Pegawai</h2>
+                <input type="text" id="editNik" placeholder="Masukkan NIK untuk Edit">
+                <button onclick="loadForEdit()">Cari & Edit</button>
+                <form id="editForm" style="display:none;">
+                    <input type="text" id="editNama" placeholder="Nama">
+                    <input type="text" id="editAlamat" placeholder="Alamat">
+                    <input type="text" id="editUnit" placeholder="Unit">
+                    <input type="text" id="editGolongan" placeholder="Golongan">
+                    <input type="number" id="editJumlahAnak" placeholder="Jumlah Anak">
+                    <input type="number" id="editMasukHari" placeholder="Masuk (Hari)">
+                    <input type="number" id="editJamKerja" placeholder="Jam Kerja">
+                    <button type="submit">Simpan Perubahan</button>
+                </form>
+            </div>
+
+            <!-- Hapus Data -->
+            <div class="feature">
+                <h2>Hapus Data Pegawai</h2>
+                <input type="text" id="deleteNik" placeholder="Masukkan NIK untuk Hapus">
+                <button onclick="deleteEmployee()">Hapus</button>
+            </div>
+
+            <!-- Cari Data -->
+            <div class="feature">
+                <h2>Cari Data Pegawai berdasarkan Nama</h2>
+                <input type="text" id="searchNama" placeholder="Masukkan Nama">
+                <button onclick="searchEmployee()">Cari</button>
+                <div id="searchResults"></div>
+            </div>
+
+            <!-- Tampilkan Semua -->
+            <div class="feature">
+                <h2>Semua Data Pegawai</h2>
+                <button onclick="displayAll()">Tampilkan Semua</button>
+                <table id="employeeTable">
+                    <thead>
+                        <tr>
+                            <th>NIK</th>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Unit</th>
+                            <th>Golongan</th>
+                            <th>Jumlah Anak</th>
+                            <th>Masuk (Hari)</th>
+                            <th>Jam Kerja</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Fungsi untuk inisialisasi database (reset data dengan dummy)
+        function initializeDatabase() {
+            const dummyData = [
+                { nik: "12345", nama: "John Doe", alamat: "Jl. ABC", unit: "IT", golongan: "A", jumlahAnak: 2, masukHari: 20, jamKerja: 8 },
+                { nik: "67890", nama: "Jane Smith", alamat: "Jl. XYZ", unit: "HR", golongan: "B", jumlahAnak: 1, masukHari: 22, jamKerja: 7 }
+            ];
+            localStorage.setItem("employees", JSON.stringify(dummyData));
+            alert("Database diinisialisasi!");
+            displayAll();
+        }
+
+        // Fungsi untuk menambah data
+        document.getElementById("addForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const employees = JSON.parse(localStorage.getItem("employees")) || [];
+            const newEmployee = {
+                nik: document.getElementById("nik").value,
+                nama: document.getElementById("nama").value,
+                alamat: document.getElementById("alamat").value,
+                unit: document.getElementById("unit").value,
+                golongan: document.getElementById("golongan").value,
+                jumlahAnak: parseInt(document.getElementById("jumlahAnak").value),
+                masukHari: parseInt(document.getElementById("masukHari").value),
+                jamKerja: parseInt(document.getElementById("jamKerja").value)
+            };
+            employees.push(newEmployee);
+            localStorage.setItem("employees", JSON.stringify(employees));
+            alert("Data ditambahkan!");
+            displayAll();
+            document.getElementById("addForm").reset();
+        });
+
+        // Fungsi untuk load data untuk edit
+        function loadForEdit() {
+            const nik = document.getElementById("editNik").value;
+            const employees = JSON.parse(localStorage.getItem("employees")) || [];
+            const employee = employees.find(e => e.nik === nik);
+            if (employee) {
+                document.getElementById("editNama").value = employee.nama;
+                document.getElementById("editAlamat").value = employee.alamat;
+                document.getElementById("editUnit").value = employee.unit;
+                document.getElementById("editGolongan").value = employee.golongan;
+                document.getElementById("editJumlahAnak").value = employee.jumlahAnak;
+                document.getElementById("editMasukHari").value = employee.masukHari;
+                document.getElementById("editJamKerja").value = employee.jamKerja;
+                document.getElementById("editForm").style.display = "block";
+            } else {
+                alert("Pegawai tidak ditemukan!");
+            }
+        }
+
+        // Fungsi untuk simpan edit
+        document.getElementById("editForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const nik = document.getElementById("editNik").value;
+            const employees = JSON.parse(localStorage.getItem("employees")) || [];
+            const index = employees.findIndex(e => e.nik === nik);
+            if (index !== -1) {
+                employees[index] = {
+                    nik,
+                    nama: document.getElementById("editNama").value,
+                    alamat: document.getElementById("editAlamat").value,
+                    unit: document.getElementById("editUnit").value,
+                    golongan: document.getElementById("editGolongan").value,
+                    jumlahAnak: parseInt(document.getElementById("editJumlahAnak").value),
+                    masukHari: parseInt(document.getElementById("editMasukHari").value),
+                    jamKerja: parseInt(document.getElementById("editJamKerja").value)
+                };
+                localStorage.setItem("employees", JSON.stringify(employees));
+                alert("Data diubah!");
+                displayAll();
+                document.getElementById("editForm").style.display = "none";
+            }
+        });
+
+        // Fungsi untuk hapus
+        function deleteEmployee() {
+            const nik = document.getElementById("deleteNik").value;
+            let employees = JSON.parse(localStorage.getItem("employees")) || [];
+            employees = employees.filter(e => e.nik !== nik);
+            localStorage.setItem("employees", JSON.stringify(employees));
+            alert("Data dihapus!");
+            displayAll();
+        }
+
+        // Fungsi untuk cari
+        function searchEmployee() {
+            const nama = document.getElementById("searchNama").value.toLowerCase();
+            const employees = JSON.parse(localStorage.getItem("employees")) || [];
+            const results = employees.filter(e => e.nama.toLowerCase().includes(nama));
+            const resultsDiv = document.getElementById("searchResults");
+            resultsDiv.innerHTML = "";
+            if (results.length > 0) {
+                results.forEach(emp => {
+                    resultsDiv.innerHTML += `<p>NIK: ${emp.nik}, Nama: ${emp.nama}, Alamat: ${emp.alamat}</p>`;
+                });
+            } else {
+                resultsDiv.innerHTML = "<p>Tidak ditemukan.</p>";
+            }
+        }
+
+        // Fungsi untuk tampilkan semua
+        function displayAll() {
+            const employees = JSON.parse(localStorage.getItem("employees")) || [];
+            const tbody = document.querySelector("#employeeTable tbody");
+            tbody.innerHTML = "";
+            employees.forEach(emp => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${emp.nik}</td>
+                        <td>${emp.nama}</td>
+                        <td>${emp.alamat}</td>
+                        <td>${emp.unit}</td>
+                        <td>${emp.golongan}</td>
+                        <td>${emp.jumlahAnak}</td>
+                        <td>${emp.masukHari}</td>
+                        <td>${emp.jamKerja}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Load data saat halaman dimuat
+        window.onload = displayAll;
+    </script>
+</body>
+</html>

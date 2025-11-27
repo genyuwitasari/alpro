@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Login Page</title>
+</head>
+<body>
+<div class="wrapper"></div>
+    <nav class="nav">
+        <div class="nav-logo">
+            <p>POLITEKNIK NEGERI CILACAP</p>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="#" class="link active">Home</a></li>
+                <li><a href="#" class="link active">Dashboard</a></li>
+                <li><a href="#" class="link active">Result Page</a></li>
+            </ul>
+        </div>
+        <div class="nav-button">
+            <button class="btn white-btn" id="loginBtn" onclick="login()">Login</button>
+        </div>
+        <div class="nav-menu-btn">
+            <i class="bx bx-menu" onclick="myMenuFunction"></i>
+        </div>
+    </nav>
+
+<!-----------------------------------Form Box-------------------------------------->    
+    <div class="form-box">
+
+        <!--------------------login form---------------------->
+        <div class="login-container" id="login">
+            <div class="top">
+                <header>Login</header>
+            </div>
+            <div class="input-box">
+                <input type="text" class="input-field" placeholder="Username">
+                <i class="bx bx-user"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Password">
+                <i class="bx bx-lock-alt"></i>
+            </div>
+            <div class="input-box">
+                <input type="submit" class="submit" value="Login">
+            </div>
+            <div class="two-col">
+                <div class="one">
+                    <input type="checkbox" id="login-check">
+                    <label for="login-check"> Remember Me</label>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function myMenuFunction() {
+        var i = document.getElementById("navMenu");
+
+        if(i.className === "nav-menu") {
+            i.className += " responsive";
+        } else {
+            i.className = "nav-menu";
+        }
+    }
+
+</script>
+
+<script>
+    var a = document.getElementById("loginBtn");
+    var x = document.getElementById("login");
+
+    function login() {
+        x.style.left = "4px";
+        y.style.right = "-520px";
+        a.className += " white-btn";
+        b.className = "btn";
+        x.style.opacity = 1;
+        y.style.opacity = 0;
+    }
+
+</script>
+
+<script>
+    var a = document.getElementById("loginBtn");
+    var x = document.getElementById("login");
+    function login() {
+        x.style.left = "4px";
+        // Variabel 'y' dan 'b' tidak didefinisikan di kode asli, jadi dihapus untuk menghindari error
+        // y.style.right = "-520px";
+        // a.className += " white-btn";
+        // b.className = "btn";
+        x.style.opacity = 1;
+        // y.style.opacity = 0;
+    }
+    // Logika login sederhana: validasi dan redirect
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Mencegah submit default
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        
+        // Validasi sederhana (ganti dengan logika nyata jika perlu)
+        if (username === "admin" && password === "admin") {
+            alert("Login berhasil!");
+            window.location.href = "dashboard.html"; // Redirect ke dashboard
+        } else {
+            alert("Username atau password salah!");
+        }
+    });
+</script>
+
+</body>
+</html>
